@@ -42,4 +42,4 @@ public class EventController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
-}
+}//TODO Logic
