@@ -33,7 +33,7 @@ public class SeatService {
         Seat existing = getById(id);
 
         existing.setNumber(updated.getNumber());
-        existing.setEventId(updated.getEventId());
+        //existing.setEventId(updated.getEventId());
 
 
         return existing;

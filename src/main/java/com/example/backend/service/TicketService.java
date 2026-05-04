@@ -32,7 +32,7 @@ public class TicketService {
     public Ticket update(Long id, Ticket updated) {
         Ticket existing = getById(id);
 
-        existing.setSeatId(updated.getSeatId());
+        //existing.setSeatId(updated.getSeatId());
 
         return existing;
     }

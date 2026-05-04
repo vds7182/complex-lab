@@ -32,7 +32,7 @@ public class PaymentService {
     public Payment update(Long id, Payment updated) {
         Payment existing = getById(id);
 
-        existing.setBookingId(updated.getBookingId());
+        //existing.setBookingId(updated.getBookingId());
         existing.setPaymentDetails(updated.getPaymentDetails());
 
         existing.setStatus(updated.getStatus());

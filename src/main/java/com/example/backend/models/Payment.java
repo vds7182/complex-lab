@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Data
 public class Payment {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @OneToOne
     @JoinColumn(name = "booking_id")

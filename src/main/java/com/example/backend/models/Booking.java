@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Data
 public class Booking {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
     @JoinColumn(name = "event_id")
