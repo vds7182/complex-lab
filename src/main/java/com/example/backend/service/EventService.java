@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.models.Event;
+import com.example.backend.repository.EventRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -8,42 +9,35 @@ import java.util.*;
 @Service
 public class EventService {
 
-    private final Map<Long, Event> events = new HashMap<>();
-    private Long counter = 1L;
+    private final EventRepository repo;
 
-    public List<Event> getAll() {
-        return new ArrayList<>(events.values());
-    }
-
-    public Event getById(Long id) {
-        Event event = events.get(id);
-        if (event == null) {
-            throw new RuntimeException("Event not found");
-        }
-        return event;
+    public EventService(EventRepository repo) {
+        this.repo = repo;
     }
 
     public Event create(Event event) {
-        event.setId(counter++);
-        events.put(event.getId(), event);
-        return event;
+        return repo.save(event);
+    }
+
+    public List<Event> getAll() {
+        return repo.findAll();
+    }
+
+    public Event getById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
     }
 
     public Event update(Long id, Event updated) {
-        Event existing = getById(id);
-
-        existing.setTitle(updated.getTitle());
-        existing.setType(updated.getType());
-        existing.setDate(updated.getDate());
-        existing.setPlaceId(updated.getPlaceId());
-
-        return existing;
+        Event e = getById(id);
+        e.setTitle(updated.getTitle());
+        e.setType(updated.getType());
+        e.setDate(updated.getDate());
+        //e.setPlace(updated.getPlace());
+        return repo.save(e);
     }
 
     public void delete(Long id) {
-        if (!events.containsKey(id)) {
-            throw new RuntimeException("Event not found");
-        }
-        events.remove(id);
+        repo.deleteById(id);
     }
 }

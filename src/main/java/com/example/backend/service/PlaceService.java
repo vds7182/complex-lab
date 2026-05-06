@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.models.Place;
+import com.example.backend.repository.PlaceRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -8,43 +9,37 @@ import java.util.*;
 @Service
 public class PlaceService {
 
-    private final Map<Long, Place> places = new HashMap<>();
-    private Long counter = 1L;
+    private final PlaceRepository repo;
+
+    public PlaceService(PlaceRepository repo) {
+        this.repo = repo;
+    }
+
+    public Place create(Place place) {
+        return repo.save(place);
+    }
 
     public List<Place> getAll() {
-        return new ArrayList<>(places.values());
+        return repo.findAll();
     }
 
     public Place getById(Long id) {
-        Place event = places.get(id);
-        if (event == null) {
-            throw new RuntimeException("Place not found");
-        }
-        return event;
-    }
-
-    public Place create(Place event) {
-        event.setId(counter++);
-        places.put(event.getId(), event);
-        return event;
+        return repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Place not found"));
     }
 
     public Place update(Long id, Place updated) {
-        Place existing = getById(id);
+        Place p = getById(id);
 
-        existing.setType(updated.getType());
-        existing.setName(updated.getName());
-        existing.setPhone(updated.getPhone());
-        existing.setEmail(updated.getEmail());
-        existing.setAddress(updated.getAddress());
+        p.setName(updated.getName());
+        p.setAddress(updated.getAddress());
+        p.setPhone(updated.getPhone());
+        p.setEmail(updated.getEmail());
 
-        return existing;
+        return repo.save(p);
     }
 
     public void delete(Long id) {
-        if (!places.containsKey(id)) {
-            throw new RuntimeException("Place not found");
-        }
-        places.remove(id);
+        repo.deleteById(id);
     }
 }
