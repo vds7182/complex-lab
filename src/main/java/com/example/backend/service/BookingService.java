@@ -1,48 +1,43 @@
 package com.example.backend.service;
 
 import com.example.backend.models.Booking;
+import com.example.backend.repository.BookingRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
 
 @Service
 public class BookingService {
 
-    private final Map<Long, Booking> bookings = new HashMap<>();
-    private Long counter = 1L;
+    private final BookingRepository bookings;
+
+    public BookingService(BookingRepository booking) {
+        this.bookings = booking;
+    }
 
     public List<Booking> getAll() {
-        return new ArrayList<>(bookings.values());
+        return bookings.findAll();
     }
 
     public Booking getById(Long id) {
-        Booking event = bookings.get(id);
-        if (event == null) {
-            throw new RuntimeException("Event not found");
-        }
-        return event;
+        return bookings.findById(id)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
     }
 
-    public Booking create(Booking event) {
-        event.setId(counter++);
-        bookings.put(event.getId(), event);
-        return event;
+    public Booking create(Booking booking) {
+        return bookings.save(booking);
     }
 
     public Booking update(Long id, Booking updated) {
         Booking existing = getById(id);
 
-        existing.setUserId(updated.getUserId());
-        existing.setExpiresAt(updated.getExpiresAt());
-        existing.setEventId(updated.getEventId());
+        existing.setEvent(updated.getEvent());
+        existing.setUser(updated.getUser());
 
-        return existing;
+        return bookings.save(existing);
     }
 
     public void delete(Long id) {
-        if (!bookings.containsKey(id)) {
-            throw new RuntimeException("Event not found");
-        }
-        bookings.remove(id);
+        bookings.deleteById(id);
     }
 }

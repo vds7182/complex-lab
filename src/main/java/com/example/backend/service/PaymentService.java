@@ -1,6 +1,9 @@
 package com.example.backend.service;
 
+import com.example.backend.models.Booking;
 import com.example.backend.models.Payment;
+import com.example.backend.repository.BookingRepository;
+import com.example.backend.repository.PaymentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -8,44 +11,27 @@ import java.util.*;
 @Service
 public class PaymentService {
 
-    private final Map<Long, Payment> payments = new HashMap<>();
-    private Long counter = 1L;
+    private final PaymentRepository repo;
+    private final BookingRepository bookingRepo;
+
+    public PaymentService(PaymentRepository repo, BookingRepository bookingRepo) {
+        this.repo = repo;
+        this.bookingRepo = bookingRepo;
+    }
+
+    public Payment pay(Long bookingId) {
+
+        Booking booking = bookingRepo.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        Payment payment = new Payment();
+        payment.setBooking(booking);
+        payment.setStatus("PAID");
+
+        return repo.save(payment);
+    }
 
     public List<Payment> getAll() {
-        return new ArrayList<>(payments.values());
-    }
-
-    public Payment getById(Long id) {
-        Payment event = payments.get(id);
-        if (event == null) {
-            throw new RuntimeException("Payment not found");
-        }
-        return event;
-    }
-
-    public Payment create(Payment event) {
-        event.setId(counter++);
-        payments.put(event.getId(), event);
-        return event;
-    }
-
-    public Payment update(Long id, Payment updated) {
-        Payment existing = getById(id);
-
-        existing.setBookingId(updated.getBookingId());
-        existing.setPaymentDetails(updated.getPaymentDetails());
-
-        existing.setStatus(updated.getStatus());
-
-
-
-        return existing;
-    }
-
-    public void delete(Long id) {
-        if (!payments.containsKey(id)) {
-            throw new RuntimeException("Payment not found");
-        }
-        payments.remove(id);
+        return repo.findAll();
     }
 }
