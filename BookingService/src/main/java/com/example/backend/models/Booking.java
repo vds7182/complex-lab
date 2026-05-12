@@ -12,9 +12,8 @@ public class Booking {
     private Long id;
 
     private Long event;
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private Long user;
     private LocalDateTime createdAt;
     private LocalDateTime expiresAt;
+    private LocalDateTime time;
 }

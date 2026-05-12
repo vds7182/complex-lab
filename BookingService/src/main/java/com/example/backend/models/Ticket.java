@@ -10,8 +10,8 @@ public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne
-    @JoinColumn(name = "booking_id")
-    private Booking booking;
+    private Long booking;
     private Long seat;
+    private Long payment;
+    private String QrCode;
 }
