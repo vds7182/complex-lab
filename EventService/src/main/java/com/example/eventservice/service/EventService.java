@@ -2,6 +2,7 @@ package com.example.eventservice.service;
 
 import com.example.eventservice.models.Event;
 import com.example.eventservice.repository.EventRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -18,11 +19,12 @@ public class EventService {
     public Event create(Event event) {
         return repo.save(event);
     }
-
+    @Cacheable("events")
     public List<Event> getAll() {
         return repo.findAll();
     }
 
+    @Cacheable("event")
     public Event getById(Long id) {
         return repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Event not found"));
