@@ -4,17 +4,17 @@ services:
   redis:
     image: redis:7
     ports:
-      - "6379:6379"
+      - "6381:6379"
     networks:
       - app-net
 
-  event-db:
+  booking-db:
     image: mysql:8
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: event
+      MYSQL_DATABASE: booking
     ports:
-      - "3307:3306"
+      - "3309:3306"
     networks:
       - app-net
     healthcheck:
@@ -24,13 +24,13 @@ services:
       retries: 20
       start_period: 30s
 
-  event-service:
+  booking-service:
     build: .
     ports:
-      - "8081:8081"
+      - "8083:8081"
     restart: on-failure
     depends_on:
-      event-db:
+      booking-db:
         condition: service_healthy
       redis:
         condition: service_started
