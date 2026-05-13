@@ -37,7 +37,7 @@ public class BookingService {
 
         try {
             restTemplate.getForObject(
-                    "http://eventservice-event-service-1:8081/events/{id}",
+                    "http://event-service-1:8081/events/{id}",
                     Object.class,
                     booking.getEvent()
             );
