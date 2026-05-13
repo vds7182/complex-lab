@@ -27,7 +27,7 @@ public class TicketService {
     public Ticket generate(Long paymentId) {
 
         // 🔥 CALL PAYMENT SERVICE
-        String url = "http://localhost:8083/payments/" + paymentId;
+        String url = "http://payment-service:8083/payments/" + paymentId;
 
         PaymentResponse payment;
 

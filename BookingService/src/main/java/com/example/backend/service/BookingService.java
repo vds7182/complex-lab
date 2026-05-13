@@ -33,14 +33,18 @@ public class BookingService {
     public Booking create(Booking booking) {
 
         String eventUrl =
-                "http://localhost:8081/events/" + booking.getEvent();
+                "http://event-service:8081/events/" + booking.getEvent();
 
         try {
-            restTemplate.getForObject(eventUrl, Object.class);
+            restTemplate.getForObject(
+                    "http://eventservice-event-service-1:8081/events/{id}",
+                    Object.class,
+                    booking.getEvent()
+            );
         } catch (Exception e) {
-            throw new RuntimeException("Event not found or service unavailable");
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
-
         booking.setCreatedAt(LocalDateTime.now());
 
         return bookings.save(booking);
